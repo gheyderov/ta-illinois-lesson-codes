@@ -15,7 +15,7 @@
     <div class="maintitle neumorphic outset bg-green text-white">Chryss' Plant Shop</div>
 </div>
 <div class="d-flex w-80">
-    {% for product in products.values() %}
+    {% for product in products %}
     <div class="card">
         <div class="product neumorphic ridge">
             <a href="{{ url_for('product', id=product.id) }}">
@@ -24,7 +24,7 @@
             </a>
             <div class="cart">
                 <a href="{{ url_for('product', id=product.id) }}">
-                <div class="price float-left">{{ product.name }}</div>
+                <div class="price float-left">{{ product.title }}</div>
             </a>
                 <button class="btn left bg-blue float-right text-white neumorphic outset" type="submit" name="order-now"
                     title="Order Now">
