@@ -14,6 +14,13 @@
 <div class="d-flex">
     <div class="maintitle neumorphic outset bg-green text-white">Chryss' Plant Shop</div>
 </div>
+
+<ul>
+    {% for category in categories %}
+    <a href="{{ url_for('cat', name=category.name) }}"><li>{{ category }}</li></a>
+    {% endfor %}
+</ul>
+
 <div class="d-flex w-80">
     {% for product in products %}
     <div class="card">
