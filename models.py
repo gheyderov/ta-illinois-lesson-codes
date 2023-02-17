@@ -1,14 +1,26 @@
-from extensions import db
+from extensions import db, login_manager
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), nullable = False)
-    last_name = db.Column(db.String(100), nullable = False)
+    email = db.Column(db.String(100), nullable = False)
+    password = db.Column(db.String(255), nullable = False)
     blog = db.relationship('Blog', backref = 'user')
 
-    def __init__(self, name, last_name):
+    def __init__(self, name, email, password):
         self.name = name
-        self.last_name = last_name
+        self.email = email
+        self.password = password
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return self.name

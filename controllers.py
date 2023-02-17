@@ -1,8 +1,39 @@
 from app import app
 from flask import render_template, request
-from models import Product, Contact, Category
-from forms import ContactForm
+from models import Product, Contact, Category, User
+from forms import ContactForm, RegisterForm, LoginForm
+from werkzeug.security import generate_password_hash
+from flask_login import login_user
 
+
+
+@app.route("/register", methods = ['GET', 'POST'])
+def reg():
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.form)
+        if form.validate_on_submit():
+            user = User(
+                name = form.name.data,
+                email = form.email.data,
+                password = generate_password_hash(form.password.data)
+            )
+            user.save()
+    return render_template('register.html', form = form)
+
+
+
+@app.route("/login", methods = ['GET', 'POST'])
+def log():
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.form)
+        user = User.query.filter_by(name = form.name.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            print('login')
+            return render_template('index.html')
+    return render_template('login.html', form = form)
 
 
 
